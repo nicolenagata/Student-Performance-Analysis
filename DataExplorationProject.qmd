@@ -1,0 +1,71 @@
+---
+title: "Data Exploration Project"
+format: docx
+editor: visual
+echo: FALSE
+warning: FALSE
+message: FALSE
+---
+
+## Loading Dataset
+
+This section will load the Student Performance data set into R studio.
+
+```{r}
+#importing libraries 
+library(rio)
+
+#save this document and Student Performance Data csv file in same folder
+#set working directory to source file location
+#storing spotify dataset in a variable 'd'
+d <- import('student_data.csv')
+```
+
+## Preliminary Calculations
+
+```{r}
+#importing libraries
+library(tidyverse)
+library(vtable)
+```
+
+## Affect of Student's Commute on Final Grade
+
+On average, students with shorter commute times to school have better final grades.
+
+```{r}
+#importing libraries
+library(dplyr)
+
+d <- d %>%
+  filter(school %in% c('GP'))
+save(d, file = "GP.RData")
+
+#Average grade for each length of commute
+commute <- d %>%
+  group_by(traveltime) %>%
+  summarize(avg = mean(G3))
+```
+
+```{r}
+#importing libraries
+library(ggplot2)
+
+ggplot(commute, aes(x = reorder(traveltime, avg), y = avg)) +
+  geom_col() +
+  theme_classic() +
+  coord_flip() +
+  ggtitle('Students Average Final Grade by Commute') +
+  ylab('Average Final Grade') +
+  xlab('Commute (mins)') +
+  scale_x_discrete(breaks = c(1, 2, 3, 4),
+                       labels = c("< 15", "15-30", "30-60", ">60"))
+```
+
+```{r}
+ggplot(d, aes(x = G1, y = G2, line = G3)) +
+  geom_smooth()
+```
+
+```         
+```
